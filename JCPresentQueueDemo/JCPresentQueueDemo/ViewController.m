@@ -22,31 +22,18 @@
 
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    JCPresentType presentType = JCPresentTypeLIFO;
+
+    // JCPresentTypeLIFO: alert3 >> alert2 >> alert1 (same with UIAlertView)
+    // JCPresentTypeFIFO: alert1 >> alert2 >> alert3
     
-    // alert1
-    UIAlertController *alert1 = [UIAlertController alertControllerWithTitle:@"alert1" message:nil preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *alertAction1 = [UIAlertAction actionWithTitle:@"ok" style:UIAlertActionStyleDefault handler:nil];
-    [alert1 addAction:alertAction1];
-    [self jc_presentViewController:alert1 presentType:presentType presentCompletion:nil dismissCompletion:nil];
+    for (int i = 1; i<4; i++) {
+        NSString *title = [NSString stringWithFormat:@"alert%zi", i];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *alertAction1 = [UIAlertAction actionWithTitle:@"ok" style:UIAlertActionStyleDefault handler:nil];
+        [alert addAction:alertAction1];
+        [self jc_presentViewController:alert presentType:JCPresentTypeLIFO presentCompletion:nil dismissCompletion:nil];
+    }
     
-    // alert2
-    UIAlertController *alert2 = [UIAlertController alertControllerWithTitle:@"alert2" message:nil preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *alertAction2 = [UIAlertAction actionWithTitle:@"ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        // alert4
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"alert4" message:nil preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *alertAction = [UIAlertAction actionWithTitle:@"ok" style:UIAlertActionStyleDefault handler:nil];
-        [alert addAction:alertAction];
-        [self jc_presentViewController:alert presentType:presentType presentCompletion:nil dismissCompletion:nil];
-    }];
-    [alert2 addAction:alertAction2];
-    [self jc_presentViewController:alert2 presentType:presentType presentCompletion:nil dismissCompletion:nil];
-    
-    // alert3
-    UIAlertController *alert3 = [UIAlertController alertControllerWithTitle:@"alert3" message:nil preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *alertAction3 = [UIAlertAction actionWithTitle:@"ok" style:UIAlertActionStyleDefault handler:nil];
-    [alert3 addAction:alertAction3];
-    [self jc_presentViewController:alert3 presentType:presentType presentCompletion:nil dismissCompletion:nil];
 }
 
 
