@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "JCPresentQueue"
-  s.version      = "1.0.1"
+  s.version      = "1.0.2"
   s.summary      = "A category for present controllers with FIFO or LIFO"
   s.homepage     = "https://github.com/HJaycee/JCPresentQueue"
   s.license      = "MIT"
