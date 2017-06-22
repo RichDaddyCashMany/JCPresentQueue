@@ -102,12 +102,16 @@
     return operationQueue;
 }
 
+- (void)jc_presentViewController:(UIViewController *)controller presentCompletion:(void (^)(void))presentCompletion dismissCompletion:(void (^)(void))dismissCompletion {
+    [self jc_presentViewController:controller presentType:JCPresentTypeLIFO presentCompletion:presentCompletion dismissCompletion:dismissCompletion];
+}
+
 - (void)jc_presentViewController:(UIViewController *)controller presentType:(JCPresentType)presentType presentCompletion:(void (^)(void))presentCompletion dismissCompletion:(void (^)(void))dismissCompletion {
     if ([[self getOperationQueue] operations].count > 0 && presentType != [self getCurrentPresentType]) {
         [NSException raise:@"This is dangerous." format:@"%@'s present queue is confused. Dont't use LIFO and FIFO two together.", self];
     }
     [self setCurrentPresentType:presentType];
-
+    
     if (presentType == JCPresentTypeLIFO) {
         [self lifoPresentViewController:controller presentCompletion:presentCompletion dismissCompletion:dismissCompletion];
     } else {
@@ -117,6 +121,7 @@
 
 #pragma mark - present controller with LIFO
 - (void)lifoPresentViewController:(UIViewController *)controller presentCompletion:(void (^)(void))presentCompletion dismissCompletion:(void (^)(void))dismissCompletion {
+    
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     
     // put in stack
@@ -139,7 +144,7 @@
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [weakController setDismissing:NO];
                 // if the dismiss controller is the last one
-                if (stackControllers.lastObject == controller) {
+                if (stackControllers.lastObject == weakController) {
                     [stackControllers removeObject:weakController];
                     
                     // is there any previous controllers
@@ -224,7 +229,7 @@
         });
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     }];
-
+    
     // put in queue
     if ([self getOperationQueue].operations.lastObject) {
         [operation addDependency:[self getOperationQueue].operations.lastObject];
