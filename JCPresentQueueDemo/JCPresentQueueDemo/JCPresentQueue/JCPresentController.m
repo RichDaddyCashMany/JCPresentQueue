@@ -9,25 +9,6 @@
 #import "JCPresentController.h"
 #import "UIViewController+JCPresentQueue.h"
 
-@interface UIApplication (JCPresentWindow)
-
-- (UIWindow*)mainApplicationWindowIgnoringWindow:(UIWindow*)ignoringWindow;
-
-@end
-
-@implementation UIApplication (JCPresentWindow)
-
-- (UIWindow*)mainApplicationWindowIgnoringWindow:(UIWindow *)ignoringWindow {
-    for (UIWindow *window in [[UIApplication sharedApplication] windows]) {
-        if (!window.hidden && window != ignoringWindow) {
-            return window;
-        }
-    }
-    return nil;
-}
-
-@end
-
 @interface JCPresentWindow : UIWindow
 @end
 
@@ -35,30 +16,9 @@
 @end
 
 @interface JCPresentRootController : UIViewController
-
 @end
 
 @implementation JCPresentRootController
-
-- (UIViewController*)mainController {
-    UIWindow *mainAppWindow = [[UIApplication sharedApplication] mainApplicationWindowIgnoringWindow:self.view.window];
-    UIViewController *topController = mainAppWindow.rootViewController;
-    
-    while(topController.presentedViewController) {
-        topController = topController.presentedViewController;
-    }
-    
-    return topController;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-    return [[self mainController] shouldAutorotateToInterfaceOrientation:toInterfaceOrientation];
-}
-
-- (BOOL)shouldAutorotate {
-    return [[self mainController] shouldAutorotate];
-}
-
 @end
 
 @interface JCPresentQueueManager : NSObject

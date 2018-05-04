@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name         = "JCPresentQueue"
-  s.version      = "1.1.0"
-  s.summary      = "A category for present controllers with FIFO or LIFO"
+  s.version      = "1.1.1"
+  s.summary      = "automatic manages the queue of presented controllers"
   s.homepage     = "https://github.com/HJaycee/JCPresentQueue"
   s.license      = "MIT"
   s.author       = { "HJaycee" => "huangxisu@gmail.com" }
