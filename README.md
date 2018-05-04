@@ -1,6 +1,8 @@
 # JCPresentQueue
 
-automatic manages the queue of presented controllers
+You can present `multiple` alerts like this:
+
+<img style="width:320px" src="http://github-1252137158.file.myqcloud.com/JCPresentQueue/alert_gif.gif"></img>
 
 ## Installation with CocoaPods
 
