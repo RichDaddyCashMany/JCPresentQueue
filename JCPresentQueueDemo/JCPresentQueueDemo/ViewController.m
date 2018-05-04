@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "UIViewController+JCPresentQueue.h"
+#import "JCPresentController.h"
 
 @interface ViewController ()
 
@@ -18,33 +18,33 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self show];
+    });
 }
 
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-
-    // JCPresentTypeLIFO: alert3 >> alert2 >> alert1 (same with UIAlertView)
+- (void)show {
+    // JCPresentTypeLIFO: alert3 >> alert2 >> alert1
     // JCPresentTypeFIFO: alert1 >> alert2 >> alert3
     
-    for (int i = 1; i<4; i++) {
-        NSString *title = [NSString stringWithFormat:@"alert%zi", i];
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *alertAction1 = [UIAlertAction actionWithTitle:@"ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            if (i == 3) {
-                NSString *title = [NSString stringWithFormat:@"alert%@", @"4"];
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *alertAction1 = [UIAlertAction actionWithTitle:@"ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                    
-                }];
-                [alert addAction:alertAction1];
-                [self jc_presentViewController:alert presentType:JCPresentTypeLIFO presentCompletion:nil dismissCompletion:nil];
-            }
-        }];
-        [alert addAction:alertAction1];
-        [self jc_presentViewController:alert presentType:JCPresentTypeLIFO presentCompletion:nil dismissCompletion:nil];
-    }
+    UIViewController *otherViewController = ({
+        UIViewController *vc = [UIViewController new];
+        vc.view.backgroundColor = [UIColor redColor];
+        vc;
+    });
+    [self presentViewController:otherViewController animated:YES completion:nil];
     
+    for (int i = 0; i<3; i++) {
+        UIAlertController *alert = ({
+            NSString *title = [NSString stringWithFormat:@"alert%i", i + 1];
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *alertAction = [UIAlertAction actionWithTitle:@"ok" style:UIAlertActionStyleDefault handler:nil];
+            [alert addAction:alertAction];
+            alert;
+        });
+        [JCPresentController presentViewControllerLIFO:alert presentCompletion:nil dismissCompletion:nil];
+    }
 }
-
 
 @end

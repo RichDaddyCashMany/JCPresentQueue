@@ -15,7 +15,8 @@
 		030C7A451E9CE54A00B822C1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 030C7A431E9CE54A00B822C1 /* LaunchScreen.storyboard */; };
 		030C7A501E9CE54A00B822C1 /* JCPresentQueueDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 030C7A4F1E9CE54A00B822C1 /* JCPresentQueueDemoTests.m */; };
 		030C7A5B1E9CE54A00B822C1 /* JCPresentQueueDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 030C7A5A1E9CE54A00B822C1 /* JCPresentQueueDemoUITests.m */; };
-		030C7A6A1E9CE58800B822C1 /* UIViewController+JCPresentQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 030C7A691E9CE58800B822C1 /* UIViewController+JCPresentQueue.m */; };
+		03B4E027209C4CD900041657 /* JCPresentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 03B4E024209C4CD900041657 /* JCPresentController.m */; };
+		03B4E028209C4CD900041657 /* UIViewController+JCPresentQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 03B4E025209C4CD900041657 /* UIViewController+JCPresentQueue.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,8 +53,10 @@
 		030C7A561E9CE54A00B822C1 /* JCPresentQueueDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JCPresentQueueDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		030C7A5A1E9CE54A00B822C1 /* JCPresentQueueDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JCPresentQueueDemoUITests.m; sourceTree = "<group>"; };
 		030C7A5C1E9CE54A00B822C1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		030C7A681E9CE58800B822C1 /* UIViewController+JCPresentQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+JCPresentQueue.h"; sourceTree = "<group>"; };
-		030C7A691E9CE58800B822C1 /* UIViewController+JCPresentQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+JCPresentQueue.m"; sourceTree = "<group>"; };
+		03B4E023209C4CD900041657 /* UIViewController+JCPresentQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+JCPresentQueue.h"; sourceTree = "<group>"; };
+		03B4E024209C4CD900041657 /* JCPresentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JCPresentController.m; sourceTree = "<group>"; };
+		03B4E025209C4CD900041657 /* UIViewController+JCPresentQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+JCPresentQueue.m"; sourceTree = "<group>"; };
+		03B4E026209C4CD900041657 /* JCPresentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JCPresentController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,8 +107,7 @@
 		030C7A341E9CE54A00B822C1 /* JCPresentQueueDemo */ = {
 			isa = PBXGroup;
 			children = (
-				030C7A681E9CE58800B822C1 /* UIViewController+JCPresentQueue.h */,
-				030C7A691E9CE58800B822C1 /* UIViewController+JCPresentQueue.m */,
+				03B4E022209C4CD900041657 /* JCPresentQueue */,
 				030C7A381E9CE54A00B822C1 /* AppDelegate.h */,
 				030C7A391E9CE54A00B822C1 /* AppDelegate.m */,
 				030C7A3B1E9CE54A00B822C1 /* ViewController.h */,
@@ -143,6 +145,17 @@
 				030C7A5C1E9CE54A00B822C1 /* Info.plist */,
 			);
 			path = JCPresentQueueDemoUITests;
+			sourceTree = "<group>";
+		};
+		03B4E022209C4CD900041657 /* JCPresentQueue */ = {
+			isa = PBXGroup;
+			children = (
+				03B4E026209C4CD900041657 /* JCPresentController.h */,
+				03B4E024209C4CD900041657 /* JCPresentController.m */,
+				03B4E023209C4CD900041657 /* UIViewController+JCPresentQueue.h */,
+				03B4E025209C4CD900041657 /* UIViewController+JCPresentQueue.m */,
+			);
+			path = JCPresentQueue;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -278,9 +291,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03B4E027209C4CD900041657 /* JCPresentController.m in Sources */,
 				030C7A3D1E9CE54A00B822C1 /* ViewController.m in Sources */,
-				030C7A6A1E9CE58800B822C1 /* UIViewController+JCPresentQueue.m in Sources */,
 				030C7A3A1E9CE54A00B822C1 /* AppDelegate.m in Sources */,
+				03B4E028209C4CD900041657 /* UIViewController+JCPresentQueue.m in Sources */,
 				030C7A371E9CE54A00B822C1 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -513,6 +527,7 @@
 				030C7A611E9CE54A00B822C1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		030C7A621E9CE54A00B822C1 /* Build configuration list for PBXNativeTarget "JCPresentQueueDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -521,6 +536,7 @@
 				030C7A641E9CE54A00B822C1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		030C7A651E9CE54A00B822C1 /* Build configuration list for PBXNativeTarget "JCPresentQueueDemoUITests" */ = {
 			isa = XCConfigurationList;
@@ -529,6 +545,7 @@
 				030C7A671E9CE54A00B822C1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

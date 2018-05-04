@@ -1,11 +1,10 @@
 //
 //  UIViewController+JCPresentQueue.h
-//  JCAlertController
+//  JCPresentController
 //
 //  Created by HJaycee on 2017/4/4.
 //  Copyright © 2017年 HJaycee. All rights reserved.
 //
-// This is a category in https://github.com/HJaycee/JCAlertController
 
 #import <UIKit/UIKit.h>
 
@@ -17,9 +16,14 @@ typedef NS_OPTIONS (NSUInteger, JCPresentType) {
 @interface UIViewController (JCPresentQueue)
 
 /**
+ viewController already or will presented
+ */
+@property (nonatomic, readonly) NSMutableArray *presentViewControllers;
+
+/**
  Present any controller with LIFO or FIFO.
  Choose one to use, dont't use LIFO and FIFO two together.
-
+ 
  @param controller any controller inherits in UIViewController
  @param presentType JCPresentTypeLIFO or JCPresentTypeFIFO
  @param presentCompletion callback if presented

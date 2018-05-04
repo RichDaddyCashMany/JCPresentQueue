@@ -1,6 +1,6 @@
 //
 //  UIViewController+JCPresentQueue.m
-//  JCAlertController
+//  JCPresentController
 //
 //  Created by HJaycee on 2017/4/4.
 //  Copyright © 2017年 HJaycee. All rights reserved.
@@ -9,7 +9,11 @@
 #import "UIViewController+JCPresentQueue.h"
 #import <objc/runtime.h>
 
+static dispatch_queue_t _jc_present_queue;
+
 @implementation UIViewController (JCPresentQueue)
+
+@dynamic presentViewControllers;
 
 + (void)load {
     SEL oldSel = @selector(viewDidDisappear:);
@@ -93,17 +97,19 @@
     return stackControllers;
 }
 
+- (NSMutableArray *)presentViewControllers {
+    return [self getStackControllers];
+}
+
 - (NSOperationQueue *)getOperationQueue {
     static NSOperationQueue *operationQueue = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        _jc_present_queue = dispatch_queue_create("jc_present_queue", DISPATCH_QUEUE_SERIAL);
         operationQueue = [NSOperationQueue new];
+        operationQueue.underlyingQueue = _jc_present_queue;
     });
     return operationQueue;
-}
-
-- (void)jc_presentViewController:(UIViewController *)controller presentCompletion:(void (^)(void))presentCompletion dismissCompletion:(void (^)(void))dismissCompletion {
-    [self jc_presentViewController:controller presentType:JCPresentTypeLIFO presentCompletion:presentCompletion dismissCompletion:dismissCompletion];
 }
 
 - (void)jc_presentViewController:(UIViewController *)controller presentType:(JCPresentType)presentType presentCompletion:(void (^)(void))presentCompletion dismissCompletion:(void (^)(void))dismissCompletion {
