@@ -28,13 +28,6 @@
     // JCPresentTypeLIFO: alert3 >> alert2 >> alert1
     // JCPresentTypeFIFO: alert1 >> alert2 >> alert3
     
-    UIViewController *otherViewController = ({
-        UIViewController *vc = [UIViewController new];
-        vc.view.backgroundColor = [UIColor redColor];
-        vc;
-    });
-    [self presentViewController:otherViewController animated:YES completion:nil];
-    
     for (int i = 0; i<3; i++) {
         UIAlertController *alert = ({
             NSString *title = [NSString stringWithFormat:@"alert%i", i + 1];

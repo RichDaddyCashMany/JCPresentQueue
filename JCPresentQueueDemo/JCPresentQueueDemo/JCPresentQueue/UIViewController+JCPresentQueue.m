@@ -9,11 +9,13 @@
 #import "UIViewController+JCPresentQueue.h"
 #import <objc/runtime.h>
 
+NSString * const JCPresentControllersAllDismissedNotification = @"JCPresentControllersAllDismissedNotification";
+
+static NSMutableArray *_stackControllers;
+static NSOperationQueue *_operationQueue;
 static dispatch_queue_t _jc_present_queue;
 
 @implementation UIViewController (JCPresentQueue)
-
-@dynamic presentViewControllers;
 
 + (void)load {
     SEL oldSel = @selector(viewDidDisappear:);
@@ -27,6 +29,26 @@ static dispatch_queue_t _jc_present_queue;
     } else {
         method_exchangeImplementations(oldMethod, newMethod);
     }
+    
+    _stackControllers = ({
+        static NSMutableArray *stackControllers = nil;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            stackControllers = [NSMutableArray array];
+        });
+        stackControllers;
+    });
+    
+    _operationQueue = ({
+        static NSOperationQueue *operationQueue = nil;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            _jc_present_queue = dispatch_queue_create("jc_present_queue", DISPATCH_QUEUE_SERIAL);
+            operationQueue = [NSOperationQueue new];
+            operationQueue.underlyingQueue = _jc_present_queue;
+        });
+        operationQueue;
+    });
 }
 
 - (void)jc_viewDidDisappear:(BOOL)animated {
@@ -88,32 +110,8 @@ static dispatch_queue_t _jc_present_queue;
     return [num boolValue];
 }
 
-- (NSMutableArray *)getStackControllers {
-    static NSMutableArray *stackControllers = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        stackControllers = [NSMutableArray array];
-    });
-    return stackControllers;
-}
-
-- (NSMutableArray *)presentViewControllers {
-    return [self getStackControllers];
-}
-
-- (NSOperationQueue *)getOperationQueue {
-    static NSOperationQueue *operationQueue = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _jc_present_queue = dispatch_queue_create("jc_present_queue", DISPATCH_QUEUE_SERIAL);
-        operationQueue = [NSOperationQueue new];
-        operationQueue.underlyingQueue = _jc_present_queue;
-    });
-    return operationQueue;
-}
-
 - (void)jc_presentViewController:(UIViewController *)controller presentType:(JCPresentType)presentType presentCompletion:(void (^)(void))presentCompletion dismissCompletion:(void (^)(void))dismissCompletion {
-    if ([[self getOperationQueue] operations].count > 0 && presentType != [self getCurrentPresentType]) {
+    if ([_operationQueue operations].count > 0 && presentType != [self getCurrentPresentType]) {
         [NSException raise:@"This is dangerous." format:@"%@'s present queue is confused. Dont't use LIFO and FIFO two together.", self];
     }
     [self setCurrentPresentType:presentType];
@@ -131,7 +129,7 @@ static dispatch_queue_t _jc_present_queue;
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     
     // put in stack
-    NSMutableArray *stackControllers = [self getStackControllers];
+    NSMutableArray *stackControllers = _stackControllers;
     if (![stackControllers containsObject:controller]) {
         [stackControllers addObject:controller];
     }
@@ -147,7 +145,7 @@ static dispatch_queue_t _jc_present_queue;
             
             // fetch new next controller if exists, because button action after dismiss completion
             [weakController setDismissing:YES];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [weakController setDismissing:NO];
                 // if the dismiss controller is the last one
                 if (stackControllers.lastObject == weakController) {
@@ -157,6 +155,8 @@ static dispatch_queue_t _jc_present_queue;
                     if (stackControllers.count > 0) {
                         UIViewController *preController = [stackControllers lastObject];
                         [self lifoPresentViewController:preController presentCompletion:[preController getPresentCompletion] dismissCompletion:[preController getDismissCompletion]];
+                    } else {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:JCPresentControllersAllDismissedNotification object:nil];
                     }
                 } else {
                     NSUInteger index = [stackControllers indexOfObject:weakController];
@@ -202,10 +202,10 @@ static dispatch_queue_t _jc_present_queue;
     }];
     
     // put in queue
-    if ([self getOperationQueue].operations.lastObject) {
-        [operation addDependency:[self getOperationQueue].operations.lastObject];
+    if (_operationQueue.operations.lastObject) {
+        [operation addDependency:_operationQueue.operations.lastObject];
     }
-    [[self getOperationQueue] addOperation:operation];
+    [_operationQueue addOperation:operation];
 }
 
 // dismiss controller temporarily
@@ -227,6 +227,11 @@ static dispatch_queue_t _jc_present_queue;
             if (dismissCompletion) {
                 dismissCompletion();
             }
+            
+            if (_operationQueue.operations.count <= 1) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:JCPresentControllersAllDismissedNotification object:nil];
+            }
+            
             // got to next operation
             dispatch_semaphore_signal(semaphore);
         }];
@@ -237,10 +242,10 @@ static dispatch_queue_t _jc_present_queue;
     }];
     
     // put in queue
-    if ([self getOperationQueue].operations.lastObject) {
-        [operation addDependency:[self getOperationQueue].operations.lastObject];
+    if (_operationQueue.operations.lastObject) {
+        [operation addDependency:_operationQueue.operations.lastObject];
     }
-    [[self getOperationQueue] addOperation:operation];
+    [_operationQueue addOperation:operation];
 }
 
 @end

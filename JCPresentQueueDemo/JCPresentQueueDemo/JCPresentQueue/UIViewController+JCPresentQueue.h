@@ -8,17 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+extern NSString * const JCPresentControllersAllDismissedNotification;
+
 typedef NS_OPTIONS (NSUInteger, JCPresentType) {
     JCPresentTypeLIFO = 0, // last in, first out
     JCPresentTypeFIFO      // first in, last out
 };
 
 @interface UIViewController (JCPresentQueue)
-
-/**
- viewController already or will presented
- */
-@property (nonatomic, readonly) NSMutableArray *presentViewControllers;
 
 /**
  Present any controller with LIFO or FIFO.

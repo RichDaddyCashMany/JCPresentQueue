@@ -56,6 +56,10 @@
 
 @implementation JCPresentController
 
++ (void)load {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAllControllersDismissed) name:JCPresentControllersAllDismissedNotification object:nil];
+}
+
 + (void)presentViewControllerLIFO:(UIViewController *)viewController presentCompletion:(void (^)(void))presentCompletion dismissCompletion:(void (^)(void))dismissCompletion {
 [self presentViewController:viewController presentType:JCPresentTypeLIFO presentCompletion:presentCompletion dismissCompletion:dismissCompletion];
 }
@@ -65,20 +69,20 @@
 }
 
 + (void)presentViewController:(UIViewController *)viewController presentType:(JCPresentType)presentType presentCompletion:(void (^)(void))presentCompletion dismissCompletion:(void (^)(void))dismissCompletion {
-    JCPresentQueueManager *manager = [JCPresentQueueManager shareManager];
-    [manager.overlayWindow.rootViewController jc_presentViewController:viewController presentType:presentType presentCompletion:^{
+    [[JCPresentQueueManager shareManager].overlayWindow.rootViewController jc_presentViewController:viewController presentType:presentType presentCompletion:^{
         if (presentCompletion) {
             presentCompletion();
         }
     } dismissCompletion:^{
-        if (manager.overlayWindow.rootViewController.presentViewControllers.count <= 1) {
-            manager.overlayWindow.hidden = YES;
-            manager.overlayWindow = nil;
-        }
         if (dismissCompletion) {
             dismissCompletion();
         }
     }];
+}
+
++ (void)onAllControllersDismissed {
+    [JCPresentQueueManager shareManager].overlayWindow.hidden = YES;
+    [JCPresentQueueManager shareManager].overlayWindow = nil;
 }
 
 @end
