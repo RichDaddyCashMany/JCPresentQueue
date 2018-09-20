@@ -48,6 +48,7 @@
         _overlayWindow.windowLevel = UIWindowLevelNormal;
         _overlayWindow.rootViewController = rootViewController;
         _overlayWindow.hidden = NO;
+        [_overlayWindow makeKeyAndVisible];
     }
     return _overlayWindow;
 }
