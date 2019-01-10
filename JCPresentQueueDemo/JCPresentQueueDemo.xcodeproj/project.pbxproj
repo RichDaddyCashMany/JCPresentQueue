@@ -225,6 +225,7 @@
 				TargetAttributes = {
 					030C7A311E9CE54A00B822C1 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = G64249562D;
 						ProvisioningStyle = Automatic;
 					};
 					030C7A4A1E9CE54A00B822C1 = {
@@ -442,10 +443,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = G64249562D;
 				INFOPLIST_FILE = JCPresentQueueDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.HJaycee.JCPresentQueueDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.xslyc.xslyc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -454,10 +456,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = G64249562D;
 				INFOPLIST_FILE = JCPresentQueueDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.HJaycee.JCPresentQueueDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.xslyc.xslyc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
