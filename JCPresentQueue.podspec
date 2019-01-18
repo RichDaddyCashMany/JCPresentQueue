@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "JCPresentQueue"
-  s.version      = "1.1.3"
+  s.version      = "1.1.4"
   s.summary      = "automatic manages the queue of presented controllers"
   s.homepage     = "https://github.com/HJaycee/JCPresentQueue"
   s.license      = "MIT"
